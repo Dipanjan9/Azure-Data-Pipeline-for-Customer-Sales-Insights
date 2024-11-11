@@ -82,6 +82,6 @@ By automating the entire data pipeline, the project provides stakeholders with c
 ## End Notes
 
 * This project demonstrates how to set up a scalable data pipeline using Azure services such as ADF, Databricks, and Synapse.
-* Access management is secured using **role-based access control (RBAC)** via **Microsoft Entra ID**.
+* Access management is secured using **role-based access control (RBAC)** via **Microsoft Entra ID**(formerly Active Directory).
 * While the AdventureWorks database is relatively small, the solution architecture is designed to be adaptable for larger datasets and more complex pipelines.
 * Using Azure Databricks and Synapse enhances data transformation and analytics capabilities beyond what could be achieved with ADF alone, providing greater flexibility and processing power.
