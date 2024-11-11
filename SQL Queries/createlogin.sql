@@ -1,0 +1,2 @@
+CREATE LOGIN #####
+WITH PASSWORD = '#####';
