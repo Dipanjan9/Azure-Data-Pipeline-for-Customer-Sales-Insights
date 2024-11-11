@@ -13,7 +13,7 @@ Data migration to the cloud is a common scenario for data engineers working with
 * Analytics and Dashboard Reporting with Power BI
 * Data Security and Governance in Azure
 
-![Solution Architecture Diagram](https://your-image-link-here)
+![Solution Architecture Diagram](https://github.com/Dipanjan9/Azure-Data-Pipeline-for-Customer-Sales-Insights/blob/main/images/architecture.PNG)
 
 ## Prerequisites
 
