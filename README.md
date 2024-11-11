@@ -1,110 +1,90 @@
-# Azure-Data-Pipeline-for-Customer-Sales-Insights
+# Azure Data Engineering Pipeline for Customer & Sales Insights
 
-Azure Data Pipeline for Customer & Sales Insights
+This project builds an end-to-end Azure Data Engineering solution. The pipeline performs **Data Ingestion**, **ETL (Extract, Transform, Load)**, and **Analytics**, all using Microsoft Azure services and Power BI for visualization.
 
-This project implements a data pipeline to generate actionable insights from customer and sales data, leveraging Azure services for data ingestion, transformation, and visualization. Stakeholders can use an interactive Power BI dashboard to analyze key metrics like Sales by Gender and Product Category, with options to filter by date, product category, and gender.
+## Goal of the Project
 
-Table of Contents
-Overview
-Business Requirements
-Solution Architecture
-Technology Stack
-Setup Instructions
-Pipeline Components
-Security and Governance
-Testing
-Contributing
-License
-Overview
-This project addresses a business need to understand customer demographics and their impact on sales. By building an end-to-end data pipeline, it enables stakeholders to access current and actionable insights into gender distribution and product purchases through an interactive dashboard.
+The project aims to create an Azure-based solution to migrate data from an on-premises SQL Server database to the cloud. It leverages **Azure Data Factory** for data ingestion, **Azure Databricks** for data transformation, and **Azure Synapse Analytics** for warehousing and analytics. The final output is an interactive **Power BI dashboard** that stakeholders can use to explore insights into customer demographics and product sales.
 
-Business Requirements
-Sales by Gender and Product Category: A dashboard visualizing total products sold, total sales revenue, and a gender distribution among customers.
-Data Filtering: Ability to filter data by product category, gender, and date.
-User-Friendly Interface: Stakeholders should access an easy-to-use, interactive dashboard for exploring insights.
-Solution Architecture
-The solution comprises several components, organized into data ingestion, transformation, loading, and reporting layers. Here’s a high-level flow:
+Data migration to the cloud is a common scenario for data engineers working with organizations of all sizes. This project has allowed me to gain hands-on experience with key data engineering skills, including:
 
-Data Ingestion:
+* Data Ingestion and ETL
+* Cloud Data Transformation using Azure Databricks
+* Analytics and Dashboard Reporting with Power BI
+* Data Security and Governance in Azure
 
-Extracts customer and sales data from an on-premises SQL database.
-Loads data into Azure Data Lake Storage (ADLS) using Azure Data Factory (ADF).
-Data Transformation:
+![Solution Architecture Diagram](https://your-image-link-here)
 
-Cleans and transforms the data in Azure Databricks.
-Structures data into Bronze (raw), Silver (cleansed), and Gold (aggregated) layers.
-Data Loading and Reporting:
+## Prerequisites
 
-Loads aggregated data into Azure Synapse Analytics for analysis.
-Builds a Power BI dashboard for visualizing insights.
-Automation:
+1. **Microsoft SQL Server Management Studio (SSMS)** installed on-premises.
+2. **Azure Subscription** with the following services:
+   * Azure Data Lake Storage Gen2
+   * Azure Data Factory
+   * Azure Key Vault
+   * Azure Databricks
+   * Azure Synapse Analytics
+   * Microsoft Entra ID for access control
+3. **Microsoft Power BI**
+4. **AdventureWorksLT2022** database set up with user credentials 'usr1', with the same credentials stored as secrets in Azure Key Vault.
 
-Automates the pipeline to run daily, ensuring data and reports are always up-to-date.
+The database used for this project is **AdventureWorksLT2022**, a sample sales database.
 
-Technology Stack
-Azure Data Factory (ADF): Orchestrates data movement and transformation.
-Azure Data Lake Storage (ADLS): Stores raw and processed data.
-Azure Databricks: Processes and transforms data.
-Azure Synapse Analytics: Data warehousing and SQL-based analytics.
-Power BI: Visualization and reporting.
-Azure Key Vault: Manages credentials and secrets securely.
-SQL Server (On-Premises): Source of customer and sales data.
-Setup Instructions
-Prerequisites
-Azure account with sufficient credits.
-Access to an on-premises SQL Server database.
-Steps
-Azure Environment Setup
+## Implementation
 
-Create a new resource group.
-Provision services:
-Azure Data Factory (ADF)
-Azure Data Lake Storage (ADLS) with bronze, silver, and gold containers.
-Azure Databricks and Synapse Analytics workspaces.
-Azure Key Vault for secret management.
-Data Ingestion
+### Part 1: Data Ingestion
 
-Set up SQL Server: Install SQL Server and SQL Server Management Studio (SSMS).
-Restore the AdventureWorks database.
-Create ADF pipelines to copy data from SQL Server to the bronze layer in ADLS.
-Data Transformation
+1. **Restore AdventureWorksLT2022 Database**: Set up the AdventureWorks database in SQL Server.
+   ![Database Setup](https://your-image-link-here)
 
-Mount ADLS in Databricks.
-Use Databricks notebooks to clean and aggregate data, transitioning it from bronze to silver to gold layers.
-Data Loading and Reporting
+2. **Azure Integration Runtime**: Set up an integration runtime in ADF to bridge between on-premises SQL Server and Azure.
+3. **Data Copy Pipeline**: Create a pipeline in ADF to copy data from the SQL Server to the **bronze layer** in Azure Data Lake Storage Gen2. Data is stored in **Parquet format**.
 
-Set up a Synapse SQL pool and load the gold data for analysis.
-Connect Power BI to Synapse and create visualizations per business requirements.
-Automation and Monitoring
+![Bronze Layer](https://your-image-link-here)
 
-Use ADF to schedule data pipelines for daily runs.
-Monitor pipeline execution with ADF and Synapse’s monitoring tools.
-Security and Governance
+### Part 2: Data Transformation
 
-Manage access with role-based access control (RBAC) using Azure Entra ID (formerly Active Directory).
-Pipeline Components
-Data Quality Checks: Automated checks for data consistency at each stage.
-Logging and Error Handling: Detailed logging and error-handling mechanisms to monitor pipeline performance.
-Incremental Data Loads: Incremental loading to optimize resources.
-Power BI Dashboard: An interactive dashboard with the following key metrics:
-Total products sold by gender and category.
-Total sales revenue by gender and category.
-Filters by date, product category, and gender.
-Security and Governance
-Data Encryption: Ensure data encryption in transit and at rest within ADLS and Synapse.
-Sensitive Data Handling: Mask or anonymize sensitive customer data.
-Access Control: Set up RBAC using Azure Entra ID for secure access management.
-Testing
-End-to-End Pipeline Testing:
+Data transformation is carried out in **Azure Databricks** with PySpark. The transformation includes two stages:
 
-Insert new records into the on-premises SQL database.
-Trigger the pipeline to verify data flows through all components.
-Confirm that the Power BI dashboard updates with new data.
-Load and Performance Testing:
+1. **Bronze to Silver Transformation**: Clean and pre-process the raw data.
+2. **Silver to Gold Transformation**: Standardize and aggregate data for business reporting.
 
-Test performance under expected load to ensure dashboard responsiveness.
-Contributing
-Contributions are welcome! Please fork this repository and submit a pull request with a description of your changes.
+Final data in the **gold layer** is stored in **Delta format**, ready for analytics and reporting.
 
-License
-MIT License
+![Data Transformation Process](https://your-image-link-here)
+
+These transformation notebooks are automated in the ADF pipeline, creating a seamless data flow from ingestion to transformation.
+
+![ADF Pipeline Integration](https://your-image-link-here)
+
+### Part 3: Data Loading
+
+1. **Load Data into Synapse Analytics**: Set up Azure Synapse Analytics to load the transformed data from the gold layer.
+2. **Stored Procedure Execution**: Use stored procedures in Synapse to create and update views in Azure SQL Database for reporting.
+
+![Synapse Loading](https://your-image-link-here)
+
+### Part 4: Data Reporting
+
+Connect **Power BI** to the Azure Synapse data views and create an interactive dashboard with key insights on:
+
+* Sales distribution by gender and product category.
+* Total products sold and revenue by category.
+
+![Power BI Dashboard](https://your-image-link-here)
+
+### Part 5: Automation and Monitoring
+
+1. **Daily Scheduled Triggers**: Configure ADF to run the pipeline daily, ensuring data is up-to-date in Power BI.
+2. **Monitoring**: Use ADF’s monitoring features to oversee pipeline executions and manage any errors or alerts.
+
+![Pipeline Monitoring](https://your-image-link-here)
+
+By automating the entire data pipeline, the project provides stakeholders with continuously updated insights.
+
+## End Notes
+
+* This project demonstrates how to set up a scalable data pipeline using Azure services such as ADF, Databricks, and Synapse.
+* Access management is secured using **role-based access control (RBAC)** via **Microsoft Entra ID**.
+* While the AdventureWorks database is relatively small, the solution architecture is designed to be adaptable for larger datasets and more complex pipelines.
+* Using Azure Databricks and Synapse enhances data transformation and analytics capabilities beyond what could be achieved with ADF alone, providing greater flexibility and processing power.
